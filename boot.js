@@ -1,4 +1,4 @@
-import Authenticator from "https://unpkg.com/netlify-auth-providers";
+const Authenticator = window.netlify.default;
 
 function p(params) {
   return Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join("&");
@@ -9,6 +9,8 @@ class GitHub {
 
   async login() {
     const authenticator = new Authenticator({});
+    authenticator.site_id = "cfe4a4fd-b125-4d6c-9d56-fd286fc807cf";
+
     return new Promise((resolve, reject) => {
       authenticator.authenticate(
           // Set the OAuth provider and token scope
@@ -37,8 +39,9 @@ class GitHub {
     return fetch(url, {
       ...opts,
       headers: {
-        ...opts.headers,
-        "Authenticate": "token " + this.token
+        ...opts?.headers,
+        Accept: "application/vnd.github.v3+json",
+        Authenticate: "token " + this.token
       }
     })
   };
@@ -53,7 +56,7 @@ class Project {
 
   async listBranches() {
     const result = await github.fetch(
-        `/api/repos/${this.owner}/${this.project}/branches`)
+        `https://api.github.com/repos/${this.owner}/${this.project}/branches`)
     return result
   }
 }

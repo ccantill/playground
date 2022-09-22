@@ -5,5 +5,8 @@
   "repository": "git@github.com:ccantill/playground",
   "author": "ccantill <christoph.cantillon@unifly.aero>",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "netlify-cli": "^11.8.2"
+  }
 }
