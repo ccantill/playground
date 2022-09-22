@@ -16,7 +16,7 @@ class GitHub {
           // Set the OAuth provider and token scope
           // Provider can be "github", "gitlab", or "bitbucket"
           // The scopes available depend on your OAuth provider
-          { provider: "github", scope: "user" },
+          { provider: "github", scope: "repo" },
           async (error, data) => {
             if (error) {
               console.error(error);
@@ -36,12 +36,12 @@ class GitHub {
   }
 
   fetch(url, opts) {
-    return fetch(url, {
+    return fetch('/api' + url, {
       ...opts,
       headers: {
         ...opts?.headers,
         Accept: "application/vnd.github.v3+json",
-        Authenticate: "token " + this.token
+        Authorization: "token " + this.token
       }
     })
   };
@@ -56,7 +56,7 @@ class Project {
 
   async listBranches() {
     const result = await github.fetch(
-        `https://api.github.com/repos/${this.owner}/${this.project}/branches`)
+        `/repos/${this.owner}/${this.project}/branches`)
     return result
   }
 }
