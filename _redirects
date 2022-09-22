@@ -1,0 +1,2 @@
+/oauth/access_token       https://github.com/login/oauth/access_token?client_id=c5f22ce7ba042048bdf8&client_secret=926eff1f8619d41a462e79ed74acc515488b0505 200
+/api/*                    https://api.github.com 200
