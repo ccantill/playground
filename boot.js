@@ -4,7 +4,6 @@ function p(params) {
 
 class GitHub {
   clientId = "c5f22ce7ba042048bdf8";
-  clientSecret = "926eff1f8619d41a462e79ed74acc515488b0505";
 
   async login() {
     if (document.location.search.startsWith("?code=")) {
@@ -23,12 +22,11 @@ class GitHub {
         redirectUri: 'https://ccantill.github.io/playground/' //document.location.origin + document.location.pathname
       }
       const tokenResponse = await fetch(
-          "https://github.com/login/oauth/access_token?" + p(params), {
+          "/oauth/access_token?" + p(params), {
             method: "POST",
             headers: {
               'Accept': 'application/json'
-            },
-            mode: 'no-cors'
+            }
           });
 
       const tokenObj = tokenResponse.json();
@@ -44,7 +42,7 @@ class Project {
 
   async listBranches() {
     const result = await fetch(
-        `https://api.github.com/repos/${this.owner}/${this.project}/branches`)
+        `/api/repos/${this.owner}/${this.project}/branches`)
     return result
   }
 }
