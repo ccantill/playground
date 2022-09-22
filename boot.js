@@ -1,3 +1,5 @@
+import Authenticator from "https://unpkg.com/netlify-auth-providers";
+
 function p(params) {
   return Object.entries(params).map(([k,v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 }
@@ -6,42 +8,51 @@ class GitHub {
   clientId = "c5f22ce7ba042048bdf8";
 
   async login() {
-    if (document.location.search.startsWith("?code=")) {
-      await this.exchangeToken(document.location.search.substring(6))
-    } else {
-      document.location = `https://github.com/login/oauth/authorize?scope=user:email&client_id=${this.clientId}`
-    }
-  }
-
-  async exchangeToken(code) {
-    {
-      const params = {
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        code: code,
-        redirectUri: 'https://ccantill.github.io/playground/' //document.location.origin + document.location.pathname
-      }
-      const tokenResponse = await fetch(
-          "/oauth/access_token?" + p(params), {
-            method: "POST",
-            headers: {
-              'Accept': 'application/json'
+    const authenticator = new Authenticator({});
+    return new Promise((resolve, reject) => {
+      authenticator.authenticate(
+          // Set the OAuth provider and token scope
+          // Provider can be "github", "gitlab", or "bitbucket"
+          // The scopes available depend on your OAuth provider
+          { provider: "github", scope: "user" },
+          async (error, data) => {
+            if (error) {
+              console.error(error);
+              reject(error);
+            } else {
+              this.token = data.token;
+              console.log("Authenticated with GitHub. Access Token: " + data.token);
+              resolve();
             }
-          });
-
-      const tokenObj = tokenResponse.json();
-
-      console.log(tokenObj);
-    }
+          }
+      );
+    })
   }
+
+  project(owner, project) {
+    return new Project(this, owner, project);
+  }
+
+  fetch(url, opts) {
+    return fetch(url, {
+      ...opts,
+      headers: {
+        ...opts.headers,
+        "Authenticate": "token " + this.token
+      }
+    })
+  };
 }
 
 class Project {
-  owner = "unifly-aero"
-  project = "unifly-portal"
+  constructor(github, owner, project) {
+    this.github = github;
+    this.owner = owner;
+    this.project = project;
+  }
 
   async listBranches() {
-    const result = await fetch(
+    const result = await github.fetch(
         `/api/repos/${this.owner}/${this.project}/branches`)
     return result
   }
