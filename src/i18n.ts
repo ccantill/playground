@@ -1,4 +1,4 @@
-import {GitHubTree, Tree, Workspace} from "./github";
+import {Tree} from "./github";
 
 type I18NFileFormat = "i18next_v1";
 
@@ -30,8 +30,8 @@ export class I18NWorkspace {
 
   private async scanResources(pattern: string, context: {namespace?: string, locale?: string, format?: I18NFileFormat}, tree = this.root, path : string | null = null) : Promise<I18NResource[]> {
     let idx = pattern.indexOf("/")
-    let p = new RegExp("^" + (idx == -1 ? pattern : pattern.substring(0, idx)) + "$")
-    let restOfPattern = idx == -1 ? null : pattern.substring(idx + 1)
+    let p = new RegExp("^" + (idx === -1 ? pattern : pattern.substring(0, idx)) + "$")
+    let restOfPattern = idx === -1 ? null : pattern.substring(idx + 1)
     let resources = [] as I18NResource[]
 
     const l = await(tree.list())

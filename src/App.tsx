@@ -78,12 +78,12 @@ function App() {
     }
 
     doIt();
-  }, [selectedBranch])
+  }, [workspace, selectedBranch, selectedRepo, selectedOrg])
 
   return (
       <div>
         <div className="githubSetup">
-          {user && <img src={user.avatar_url} className="avatar"/>}
+          {user && <img src={user.avatar_url} className="avatar" alt="avatar"/>}
           <div className="userInfo">Logged in as {user?.login}</div>
           <div className="selector">
             <select onChange={evt => selectOrg(evt.target.value)}>
