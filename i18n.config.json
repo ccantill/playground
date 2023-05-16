@@ -1,0 +1,8 @@
+{
+  "resources": [
+    {
+      "filePathPattern": "locales/(<locale>[a-z]{2}(-[A-Z]{2}))/(<namespace>.*).json",
+      "format": "i18next_v1"
+    }
+  ]
+}
